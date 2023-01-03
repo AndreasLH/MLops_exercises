@@ -1,0 +1,15 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+G = nx.DiGraph()
+G.add_nodes_from(['a', 'b', 'c', 'd', 'e', 'f', 'G'])
+G.add_edge('f', 'g', weight=3) 
+pos = nx.spring_layout(G) 
+nx.draw_networkx_nodes(G, pos) 
+nx.draw_networkx_labels(G, pos) 
+nx.draw_networkx_edges(G, pos, arrows=True)
+edge_labels = nx.get_edge_attributes(G, 'weight') 
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels) 
+plt.show() 
+path = nx.shortest_path(G, source='a', target='g', weight='weight') 
+print('dijstras algorithm')
+print(path)
