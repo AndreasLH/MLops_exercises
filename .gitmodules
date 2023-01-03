@@ -1,0 +1,3 @@
+[submodule "s2_organisation_and_version_control/cookie_test"]
+	path = s2_organisation_and_version_control/cookie_test
+	url = https://github.com/AndreasLH/cookie_test
