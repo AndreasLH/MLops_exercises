@@ -1,2 +1,4 @@
 defaults:
     - experiment: exp1
+    - hydra/job_logging: colorlog
+    - hydra/hydra_logging: colorlog

@@ -8,7 +8,7 @@ class Encoder(nn.Module):
         
         self.FC_input = nn.Linear(input_dim, hidden_dim)
         self.FC_mean  = nn.Linear(hidden_dim, latent_dim)
-        self.FC_var   = nn.Linear (hidden_dim, latent_dim)
+        self.FC_var   = nn.Linear(hidden_dim, latent_dim)
         self.training = True
         
     def forward(self, x):
