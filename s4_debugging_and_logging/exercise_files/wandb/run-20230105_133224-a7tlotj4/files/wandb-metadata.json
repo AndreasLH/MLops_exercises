@@ -1,0 +1,42 @@
+{
+    "os": "Windows-10-10.0.19041-SP0",
+    "python": "3.8.5",
+    "heartbeatAt": "2023-01-05T12:32:26.005573",
+    "startedAt": "2023-01-05T12:32:24.407850",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "wandb_tester.py",
+    "codePath": "s4_debugging_and_logging\\exercise_files\\wandb_tester.py",
+    "git": {
+        "remote": "https://github.com/AndreasLH/MLops_exercises.git",
+        "commit": "b5b88d0e21d0270b975af53e9c21e1dd99fe1545"
+    },
+    "email": "s194235@student.dtu.dk",
+    "root": "C:/Users/andre/OneDriveDTU/MLops 02476/MLops_exercises",
+    "host": "Surface",
+    "username": "andre",
+    "executable": "C:\\Users\\andre\\anaconda3\\python.exe",
+    "cpu_count": 2,
+    "cpu_count_logical": 4,
+    "cpu_freq": {
+        "current": 2396.0,
+        "min": 0.0,
+        "max": 2496.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2396.0,
+            "min": 0.0,
+            "max": 2496.0
+        }
+    ],
+    "disk": {
+        "total": 236.20019149780273,
+        "used": 222.99057388305664
+    },
+    "memory": {
+        "total": 7.923179626464844
+    }
+}

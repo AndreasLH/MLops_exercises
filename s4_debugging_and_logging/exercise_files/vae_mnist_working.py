@@ -10,6 +10,8 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 from torchvision.utils import save_image
+from torch.profiler import profile, ProfilerActivity, tensorboard_trace_handler, schedule
+
 
 # Model Hyperparameters
 dataset_path = 'datasets'
@@ -21,16 +23,34 @@ hidden_dim = 400
 latent_dim = 20
 lr = 1e-3
 epochs = 5
-
+generate_and_download_dataset = True
 
 # Data loading
-mnist_transform = transforms.Compose([transforms.ToTensor()])
+if generate_and_download_dataset:
+    mnist_transform = transforms.Compose([transforms.ToTensor()])
 
-train_dataset = MNIST(dataset_path, transform=mnist_transform, train=True, download=True)
-test_dataset  = MNIST(dataset_path, transform=mnist_transform, train=False, download=True)
+    train_dataset = MNIST(dataset_path, transform=mnist_transform, train=True, download=True)
+    test_dataset  = MNIST(dataset_path, transform=mnist_transform, train=False, download=True)
 
-train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-test_loader  = DataLoader(dataset=test_dataset,  batch_size=batch_size, shuffle=False)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+    test_loader  = DataLoader(dataset=test_dataset,  batch_size=batch_size, shuffle=False)
+
+# class Dataset(torch.utils.data.Dataset):
+#     def __init__(self, data):
+#         data_x, self.data_y = torch.load(data)
+#         self.data_x = data_x.to(torch.float32)
+
+#     def __len__(self):
+#         return len(self.data_y)
+
+#     def __getitem__(self, idx):
+#         return self.data_x[idx], self.data_y[idx]
+
+# test_dataset = Dataset('datasets/MNIST/processed/test.pt')
+# train_dataset = Dataset('datasets/MNIST/processed/training.pt')
+
+# train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+# test_loader  = DataLoader(dataset=test_dataset,  batch_size=batch_size, shuffle=False)
 
 class Encoder(nn.Module):  
     def __init__(self, input_dim, hidden_dim, latent_dim):
@@ -100,24 +120,34 @@ def loss_function(x, x_hat, mean, log_var):
 optimizer = Adam(model.parameters(), lr=lr)
 
 
+my_schedule = schedule(
+    skip_first=1,
+    wait=2,
+    warmup=1,
+    active=3,
+    repeat=2)
+
 print("Start training VAE...")
 model.train()
-for epoch in range(epochs):
-    overall_loss = 0
-    for batch_idx, (x, _) in enumerate(train_loader):
-        x = x.view(batch_size, x_dim)
-        x = x.to(DEVICE)
+with profile(activities=[ProfilerActivity.CPU], on_trace_ready=tensorboard_trace_handler("./log/vae_mnist"),schedule=my_schedule) as prof:
+    for epoch in range(epochs):
+        overall_loss = 0
+        for batch_idx, (x, _) in enumerate(train_loader):
+            x = x.view(batch_size, x_dim)
+            x = x.to(DEVICE)
 
-        optimizer.zero_grad()
+            optimizer.zero_grad()
 
-        x_hat, mean, log_var = model(x)
-        loss = loss_function(x, x_hat, mean, log_var)
-        
-        overall_loss += loss.item()
-        
-        loss.backward()
-        optimizer.step()
-    print("\tEpoch", epoch + 1, "complete!", "\tAverage Loss: ", overall_loss / (batch_idx*batch_size))    
+            x_hat, mean, log_var = model(x)
+            loss = loss_function(x, x_hat, mean, log_var)
+            
+            overall_loss += loss.item()
+            
+            loss.backward()
+            optimizer.step()
+
+            prof.step()
+        print("\tEpoch", epoch + 1, "complete!", "\tAverage Loss: ", overall_loss / (batch_idx*batch_size))    
 print("Finish!!")
 
 # Generate reconstructions
