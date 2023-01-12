@@ -2,3 +2,4 @@ s3_reproducibility/exercise_files/outputs
 __pycache__/
 datasets/
 s4_debugging_and_logging/wandb/
+s7_deploying_models/*.jpg

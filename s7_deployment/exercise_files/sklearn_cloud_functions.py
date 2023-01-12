@@ -22,3 +22,5 @@ knn.predict(iris_X_test)
 import pickle
 with open('model.pkl', 'wb') as file:
     pickle.dump(knn, file)
+
+# "5.6, 3. , 4.1, 1.3" = 1
