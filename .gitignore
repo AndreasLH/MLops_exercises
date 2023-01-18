@@ -3,3 +3,5 @@ __pycache__/
 datasets/
 s4_debugging_and_logging/wandb/
 s7_deploying_models/*.jpg
+s9_scalable_applications/exercise_files/lfw-deepfunneled/
+.vscode/
